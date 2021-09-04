@@ -1,0 +1,116 @@
+/[1-9][0-9]*|0/ 
+{ 
+    tokenList = append(tokenList,&token{
+       id: NON_NEGATIVE_INTEGER,
+       raw: yylex.Text(),
+    })
+}
+
+/\+/ 
+{ 
+    tokenList = append(tokenList,&token{
+       id: ADD,
+    })
+}
+
+/-/ 
+{ 
+    tokenList = append(tokenList,&token{
+       id: SUB,
+    })
+}
+
+/\*/ 
+{ 
+    tokenList = append(tokenList,&token{
+       id: MUL,
+    })
+}
+
+/\// 
+{ 
+    tokenList = append(tokenList,&token{
+       id: DIV,
+    })
+}
+
+/%/ 
+{ 
+    tokenList = append(tokenList,&token{
+       id: MOD,
+    })
+}
+
+/\^/ 
+{ 
+    tokenList = append(tokenList,&token{
+       id: EXP,
+    })
+}
+
+/\(/ 
+{ 
+    tokenList = append(tokenList,&token{
+       id: LEFT_PAEENTHWESES,
+    })
+}
+
+/\)/ 
+{ 
+    tokenList = append(tokenList,&token{
+       id: RIGHT_PAEENTHWESES,
+    })
+}
+
+/[ \t]+/        { /* eat up whitespace */ }
+/./               { err = UnknownCharErr }
+//
+package eval
+
+import (
+    "bytes"
+    "errors"
+)
+
+const (
+    //'+'
+	ADD = int('+')
+    //'-'
+	SUB = int('-')
+    //'*'
+	MUL = int('*')
+    //'/'
+	DIV = int('/')
+    //'%'
+	MOD = int('%')
+    //'^'
+	EXP = int('^')
+
+    //'('
+    LEFT_PAEENTHWESES = int('(')
+    //')'
+    RIGHT_PAEENTHWESES = int(')')
+
+    //'非负整数'
+    NON_NEGATIVE_INTEGER = 0
+)
+
+var (
+	UnknownCharErr    error = errors.New("unknown character")
+)
+
+type token struct{
+   id int 
+   raw string
+}
+
+func lexicalAnalysis(raw string) (tokenList []*token, err error) {
+
+   buf := bytes.NewBufferString(raw)
+   lexer := NewLexer(buf)
+
+   NN_FUN(lexer)
+
+   return
+}
+
